@@ -8,11 +8,13 @@ import random
 images_folder = "/Users/max/Desktop/clocks"
 
 specificRE = """\((\d{2}:\d{2})\)-File:.*?(.jpg|.JPG|.png|.PNG|.svg|.jpeg|.GIF|.gif|.Jpg)"""
+genericRE = """\(between (\d{2}:00) and (\d{2}:00)\)-File.*"""
 
 specificTimes = {}
 nonSpecificTimes = {}
 
-pattern = re.compile(specificRE)
+specificPattern = re.compile(specificRE)
+genericPattern = re.compile(genericRE)
 
 pygame.init()
 width = 1024
@@ -22,17 +24,55 @@ c = pygame.time.Clock()
 
 for dirname, dirnames, filenames in os.walk(images_folder):
       # print path to all filenames.
-    for filename in filenames:
-        result = pattern.match(filename)
-        
-        if result:
-	        itime = result.groups()[0]
-	        if itime not in specificTimes:
-	        	specificTimes[itime] = [filename]
-	        else:
-	        	specificTimes[itime].append(filename)
+	for filename in filenames:
+		specificResult = specificPattern.match(filename)
+		genericResult = genericPattern.match(filename)
+
+		if specificResult:
+			itime = specificResult.groups()[0]
+			if itime not in specificTimes:
+				specificTimes[itime] = [filename]
+			else:
+				specificTimes[itime].append(filename)
+		
+		elif genericResult:
+			startTime = genericResult.groups()[0]
+			endTime = genericResult.groups()[1]
+
+			key = "%s-%s" % (startTime, endTime)
+			if key not in nonSpecificTimes:
+				nonSpecificTimes[key] = [filename]
+			else:
+				nonSpecificTimes[key].append(filename)
 
 
+# # Code to make sure we have full coverage
+# noTimes = []
+
+def inGeneric(testTime):
+	testHour = int(testTime.split(":")[0])
+
+	for timeRange in nonSpecificTimes:
+		startHour = int(timeRange.split("-")[0].split(":")[0])
+		# endHour = int(timeRange.split("-")[1].split(":")[0])
+
+		if testHour == startHour: return nonSpecificTimes[timeRange]
+
+	return False
+
+# for hour in range(0, 12):
+# 	for minute in range(0, 60):
+# 		testTime12 = "%02d:%02d" % (hour, minute)
+# 		testTime24 = "%02d:%02d" % (hour+12, minute)
+
+# 		if testTime12 not in specificTimes and testTime24 not in specificTimes:
+# 			if not inGeneric(testTime12) and not inGeneric(testTime24):
+# 				noTimes.append(testTime12)
+# print noTimes
+
+# print inGeneric("06:53")
+
+# Clock display code
 while True:
 
 	imageCandidates = None
@@ -47,8 +87,18 @@ while True:
 		imageCandidates += specificTimes[time24h]
 
 	if imageCandidates is None:
-		print "No images found :("
-		sys.exit()
+		imageHour12 = time12h.split(":")[0]
+		imageHour24 = time24h.split(":")[0]
+
+		generic12 = inGeneric(imageHour12)
+		generic24 = inGeneric(imageHour24)
+		for filename in generic12: imageCandidates.append(filename)
+		for filename in generic24: imageCandidates.append(filename)
+
+		if imageCandidates is None:
+			print "No coverage found for time %s" % time12h
+			time.sleep(1)
+			continue
 
 	# print "Image Candidates: %s" % imageCandidates
 	imageFilename = imageCandidates[random.randrange(0, len(imageCandidates))]
