@@ -20,9 +20,14 @@ nonSpecificTimes = {}
 specificPattern = re.compile(specificRE)
 genericPattern = re.compile(genericRE)
 
+try:
+	width = int(sys.argv[1])
+	height = int(sys.argv[2])
+except:
+	print "Usage: python clocks.py screen-width screen-height"
+	sys.exit(1)
+
 pygame.init()
-width = 1024
-height = 768
 screen = pygame.display.set_mode((width, height))
 c = pygame.time.Clock()
 
@@ -79,7 +84,7 @@ def inGeneric(testTime):
 # Clock display code
 while True:
 
-	imageCandidates = None
+	imageCandidates = []
 	time12h = time.strftime("%I:%M")
 	time24h = str(int(time12h.split(":")[0]) + 12) + ":" + time12h.split(":")[1]
 
@@ -90,7 +95,7 @@ while True:
 	if time24h in specificTimes:
 		imageCandidates += specificTimes[time24h]
 
-	if imageCandidates is None:
+	if len(imageCandidates) is None:
 		imageHour12 = time12h.split(":")[0]
 		imageHour24 = time24h.split(":")[0]
 
@@ -101,7 +106,7 @@ while True:
 		if generic24:
 			for filename in generic24: imageCandidates.append(filename)
 
-		if imageCandidates is None:
+		if len(imageCandidates) is 0:
 			print "No coverage found for time %s" % time12h
 			time.sleep(1)
 			continue
