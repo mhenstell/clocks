@@ -96,8 +96,10 @@ while True:
 
 		generic12 = inGeneric(imageHour12)
 		generic24 = inGeneric(imageHour24)
-		for filename in generic12: imageCandidates.append(filename)
-		for filename in generic24: imageCandidates.append(filename)
+		if generic12:
+			for filename in generic12: imageCandidates.append(filename)
+		if generic24:
+			for filename in generic24: imageCandidates.append(filename)
 
 		if imageCandidates is None:
 			print "No coverage found for time %s" % time12h
