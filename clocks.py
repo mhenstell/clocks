@@ -4,8 +4,12 @@ import re
 import pygame
 import time
 import random
+import platform
 
-images_folder = "/Users/max/Desktop/clocks"
+if platform.system() == "Darwin":
+	images_folder = "/Users/max/Desktop/clocks"
+elif platform.system() == "Linux":
+	images_folder = "../clocks"
 
 specificRE = """\((\d{2}:\d{2})\)-File:.*?(.jpg|.JPG|.png|.PNG|.svg|.jpeg|.GIF|.gif|.Jpg)"""
 genericRE = """\(between (\d{2}:00) and (\d{2}:00)\)-File.*"""
