@@ -6,10 +6,10 @@ import time
 import random
 import platform
 
-if platform.system() == "Darwin":
-	images_folder = "/Users/max/Desktop/clocks"
-elif platform.system() == "Linux":
-	images_folder = "../clock_images"
+# if platform.system() == "Darwin":
+# 	images_folder = "/Users/max/Desktop/clocks"
+# elif platform.system() == "Linux":
+# 	images_folder = "../clock_images"
 
 specificRE = """\((\d{2}:\d{2})\)-File:.*?(.jpg|.JPG|.png|.PNG|.svg|.jpeg|.GIF|.gif|.Jpg)"""
 genericRE = """\(between (\d{2}:00) and (\d{2}:00)\)-File.*"""
@@ -23,6 +23,7 @@ genericPattern = re.compile(genericRE)
 try:
 	width = int(sys.argv[1])
 	height = int(sys.argv[2])
+	images_folder = sys.argv[3]
 except:
 	print "Usage: python clocks.py screen-width screen-height"
 	sys.exit(1)
