@@ -11,7 +11,7 @@ import platform
 # elif platform.system() == "Linux":
 # 	images_folder = "../clock_images"
 
-specificRE = """\((\d{2}:\d{2})\)-File:.*?(.jpg|.JPG|.png|.PNG|.svg|.jpeg|.GIF|.gif|.Jpg)"""
+specificRE = """\((\d{2}:\d{2})\)-File:.*?(.jpg|.JPG|.png|.PNG|.jpeg|.GIF|.gif|.Jpg)"""
 genericRE = """\(between (\d{2}:00) and (\d{2}:00)\)-File.*"""
 
 specificTimes = {}
@@ -119,20 +119,23 @@ while True:
 	imageFilename = imageCandidates[random.randrange(0, len(imageCandidates))]
 
 	# print "Image: %s" % imageFilename
+	try:
+		imageFile =  images_folder + "/" + imageFilename
+		img = pygame.image.load(imageFile)
+		img = pygame.transform.rotate(img, angle)
+		size = img.get_size()
+		proportion = float(height) / size[1]
+		xResize = int(size[0] * proportion)
+		img = pygame.transform.scale(img, (xResize, height))
+		screen.fill((0,0,0))
 
-	imageFile =  images_folder + "/" + imageFilename
-	img = pygame.image.load(imageFile)
-	img = pygame.transform.rotate(img, angle)
-	size = img.get_size()
-	proportion = float(height) / size[1]
-	xResize = int(size[0] * proportion)
-	img = pygame.transform.scale(img, (xResize, height))
-	screen.fill((0,0,0))
+		if xResize < width:
+			xPos = (width / 2) - (xResize / 2)
+		else: xPos = 0
 
-	if xResize < width:
-		xPos = (width / 2) - (xResize / 2)
-	else: xPos = 0
-
-	screen.blit(img, (xPos, 0))
-	pygame.display.flip()
-	pygame.time.wait(waitTime * 1000)
+		screen.blit(img, (xPos, 0))
+		pygame.display.flip()
+		pygame.time.wait(waitTime * 1000)
+	except Exception as e:
+		print "Exception: %s" % e
+		time.sleep(1)
