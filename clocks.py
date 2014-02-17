@@ -24,7 +24,7 @@ try:
 	width = int(sys.argv[1])
 	height = int(sys.argv[2])
 	images_folder = sys.argv[3]
-	waitTime = sys.argv[4]
+	waitTime = int(sys.argv[4])
 except:
 	print "Usage: python clocks.py screen-width screen-height"
 	sys.exit(1)
