@@ -97,7 +97,7 @@ while True:
 	if time24h in specificTimes:
 		imageCandidates += specificTimes[time24h]
 
-	if len(imageCandidates) is None:
+	if len(imageCandidates) == 0:
 		imageHour12 = time12h.split(":")[0]
 		imageHour24 = time24h.split(":")[0]
 
@@ -108,7 +108,7 @@ while True:
 		if generic24:
 			for filename in generic24: imageCandidates.append(filename)
 
-		if len(imageCandidates) is 0:
+		if len(imageCandidates) == 0:
 			print "No coverage found for time %s" % time12h
 			time.sleep(1)
 			continue
