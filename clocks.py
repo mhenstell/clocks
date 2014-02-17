@@ -24,6 +24,7 @@ try:
 	width = int(sys.argv[1])
 	height = int(sys.argv[2])
 	images_folder = sys.argv[3]
+	waitTime = sys.argv[4]
 except:
 	print "Usage: python clocks.py screen-width screen-height"
 	sys.exit(1)
@@ -131,4 +132,4 @@ while True:
 
 	screen.blit(img, (xPos, 0))
 	pygame.display.flip()
-	pygame.time.wait(15000)
+	pygame.time.wait(waitTime * 1000)
