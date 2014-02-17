@@ -30,6 +30,7 @@ except:
 	sys.exit(1)
 
 pygame.init()
+pygame.mouse.set_visible(False)
 screen = pygame.display.set_mode((width, height))
 c = pygame.time.Clock()
 
