@@ -25,6 +25,7 @@ try:
 	height = int(sys.argv[2])
 	images_folder = sys.argv[3]
 	waitTime = int(sys.argv[4])
+	angle = int(sys.argv[5])
 except:
 	print "Usage: python clocks.py screen-width screen-height"
 	sys.exit(1)
@@ -121,6 +122,7 @@ while True:
 
 	imageFile =  images_folder + "/" + imageFilename
 	img = pygame.image.load(imageFile)
+	img = pygame.transform.rotate(img, angle)
 	size = img.get_size()
 	proportion = float(height) / size[1]
 	xResize = int(size[0] * proportion)
